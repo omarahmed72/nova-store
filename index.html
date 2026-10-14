@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Store - نظام إدارة المخزون والأرباح</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <!-- تم إضافة اللوجو بدلاً من النص -->
+            <img src="logo.png" alt="Nova Store Logo" class="logo">
+            <p>نظام التسعير، الألوان، المبيعات وإدارة المخزون</p>
+        </header>
+
+        <div class="card">
+            <form id="calcForm">
+                <div class="section-title">1. بيانات الموديل الأساسية</div>
+                <div class="grid-3">
+                    <div class="input-group">
+                        <label>اسم الموديل</label>
+                        <input type="text" id="modelName" required placeholder="مثال: سويت شيرت">
+                    </div>
+                    <div class="input-group">
+                        <label>الشكل / التصميم</label>
+                        <input type="text" id="modelShape" required placeholder="مثال: سادة / بطبعة">
+                    </div>
+                    <div class="input-group">
+                        <label>اللون</label>
+                        <input type="text" id="modelColor" required placeholder="مثال: أسود">
+                    </div>
+                    <div class="input-group">
+                        <label>الكمية المنتجة (من هذا اللون والشكل)</label>
+                        <input type="number" id="producedQty" required min="1" value="1" step="1"
+                            oninput="calculateLive()">
+                    </div>
+                </div>
+
+                <div class="section-title">2. تكاليف الخامات</div>
+                <p style="margin-bottom: 15px; font-size: 0.9rem; color: var(--secondary-text);">* ادخل التكلفة الكلية
+                    للخامة والعدد،
+                    وسيحسب النظام تكلفة القطعة الواحدة.</p>
+
+                <div class="grid-2">
+                    <!-- القماش -->
+                    <div class="material-box">
+                        <h4>القماش <span class="unit-cost-badge" id="u-fabric">0 ج</span></h4>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>إجمالي المدفوع</label>
+                                <input type="number" id="c-fabric" min="0" step="0.01" value="0"
+                                    oninput="calculateLive()">
+                            </div>
+                            <div class="input-group">
+                                <label>عمل كام قطعة؟</label>
+                                <input type="number" id="q-fabric" min="1" step="1" value="1" oninput="calculateLive()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الشنط -->
+                    <div class="material-box">
+                        <h4>الشنط <span class="unit-cost-badge" id="u-bag">0 ج</span></h4>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>إجمالي المدفوع</label>
+                                <input type="number" id="c-bag" min="0" step="0.01" value="0" oninput="calculateLive()">
+                            </div>
+                            <div class="input-group">
+                                <label>الكمية المشترية</label>
+                                <input type="number" id="q-bag" min="1" step="1" value="1" oninput="calculateLive()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الأكياس -->
+                    <div class="material-box">
+                        <h4>الأكياس <span class="unit-cost-badge" id="u-plastic">0 ج</span></h4>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>إجمالي المدفوع</label>
+                                <input type="number" id="c-plastic" min="0" step="0.01" value="0"
+                                    oninput="calculateLive()">
+                            </div>
+                            <div class="input-group">
+                                <label>الكمية المشترية</label>
+                                <input type="number" id="q-plastic" min="1" step="1" value="1"
+                                    oninput="calculateLive()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الورق -->
+                    <div class="material-box">
+                        <h4>الورق <span class="unit-cost-badge" id="u-paper">0 ج</span></h4>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>إجمالي المدفوع</label>
+                                <input type="number" id="c-paper" min="0" step="0.01" value="0"
+                                    oninput="calculateLive()">
+                            </div>
+                            <div class="input-group">
+                                <label>الكمية المشترية</label>
+                                <input type="number" id="q-paper" min="1" step="1" value="1" oninput="calculateLive()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الليبل -->
+                    <div class="material-box">
+                        <h4>الليبل <span class="unit-cost-badge" id="u-label">0 ج</span></h4>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>إجمالي المدفوع</label>
+                                <input type="number" id="c-label" min="0" step="0.01" value="0"
+                                    oninput="calculateLive()">
+                            </div>
+                            <div class="input-group">
+                                <label>الكمية المشترية</label>
+                                <input type="number" id="q-label" min="1" step="1" value="1" oninput="calculateLive()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DTF -->
+                    <div class="material-box">
+                        <h4>طباعة DTF <span class="unit-cost-badge" id="u-dtf">0 ج</span></h4>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>إجمالي المدفوع</label>
+                                <input type="number" id="c-dtf" min="0" step="0.01" value="0" oninput="calculateLive()">
+                            </div>
+                            <div class="input-group">
+                                <label>عدد الطبعات</label>
+                                <input type="number" id="q-dtf" min="1" step="1" value="1" oninput="calculateLive()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">3. التسعير</div>
+                <div class="input-group" style="max-width: 300px;">
+                    <label>سعر بيع القطعة للجمهور</label>
+                    <input type="number" id="sellPrice" required min="0" step="0.01" value="0" oninput="calculateLive()"
+                        style="border: 2px solid var(--accent); font-weight: bold;">
+                </div>
+
+                <div class="live-results">
+                    <div class="result-item">
+                        <h3>التكلفة الكلية للإنتاج</h3>
+                        <div class="value" id="r-totalCost">0 ج</div>
+                    </div>
+                    <div class="result-item">
+                        <h3>تكلفة القطعة الواحدة</h3>
+                        <div class="value" id="r-pieceCost">0 ج</div>
+                    </div>
+                    <div class="result-item">
+                        <h3>مكسب القطعة الواحدة</h3>
+                        <div class="value" id="r-pieceProfit">0 ج</div>
+                    </div>
+                    <div class="result-item">
+                        <h3>المكسب المتوقع للموديل</h3>
+                        <div class="value" id="r-expectedProfit">0 ج</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-save">حفظ في الأرشيف والمخزن</button>
+            </form>
+        </div>
+
+        <!-- الأرشيف -->
+        <div class="card">
+            <div class="section-title">أرشيف الموديلات والمبيعات (المخزن)</div>
+            <div class="table-responsive">
+                <table id="archiveTable">
+                    <thead>
+                        <tr>
+                            <th>الموديل</th>
+                            <th>الشكل</th>
+                            <th>اللون</th>
+                            <th>التكلفة الكلية</th>
+                            <th>تكلفة القطعة</th>
+                            <th>سعر البيع</th>
+                            <th>الكمية</th>
+                            <th>المباع</th>
+                            <th>المتبقي</th>
+                            <th>المكسب الفعلي</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Modal -->
+    <div class="modal-overlay" id="salesModal">
+        <div class="modal">
+            <h3>تسجيل مبيعات جديدة</h3>
+            <p id="modalInfo">جاري تسجيل مبيعات لـ...</p>
+            <div class="input-group">
+                <label>عدد القطع المباعة الآن:</label>
+                <input type="number" id="sellAmount" min="1" step="1" value="1">
+            </div>
+            <input type="hidden" id="sellingItemId">
+            <div class="btn-group">
+                <button class="btn btn-sell" onclick="confirmSale()">تأكيد البيع</button>
+                <button class="btn btn-cancel" onclick="closeModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
